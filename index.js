@@ -6,22 +6,22 @@ const app = express();
 const port = process.env.PORT || 5000;
 const brands =[
     {
-        id:1, img:"https://i.ibb.co/wMmVwc1/BMW-M-Cars.jpg", name:"BMW"
+        id:1, img:"https://i.ibb.co/wMmVwc1/BMW-M-Cars.jpg", brand:"BMW"
     },
     {
-        id:2, img:"https://i.ibb.co/HF3CSHj/cover-651417aa1554c.webp", name:"MERCEDES-BENZ"
+        id:2, img:"https://i.ibb.co/W2TR9Bw/1-Mercedes-CLE-Coupe.jpg", brand:"MERCEDES-BENZ"
     },
     {
-        id:3, img:"https://i.ibb.co/mD0HRRg/hyundai-elantra-2024-1-768.jpg", name:"HYUNDAI"
+        id:3, img:"https://i.ibb.co/mD0HRRg/hyundai-elantra-2024-1-768.jpg", brand:"HYUNDAI"
     },
     {
-        id:4, img:"https://i.ibb.co/dbw5N1V/Ferrari-Logo-History-and-Meaning-Cover-8-9-22.jpg", name:"FERRARI"
+        id:4, img:"https://i.ibb.co/tC3Y4KG/cf576b3f-cbc1-4d4c-87ae.webp", brand:"FERRARI"
     },
     {
-        id:5, img:"https://i.ibb.co/NpMwvd0/autentica-cover-m.jpg", name:"LAMBORGHINI" 
+        id:5, img:"https://i.ibb.co/NpMwvd0/autentica-cover-m.jpg", brand:"LAMBORGHINI" 
     },
     {
-        id:6, img:"https://i.ibb.co/txPP6y7/2015-koenigsegg-one1-first-drive-review-car-and-driver-photo-654233-s-original.jpg", name:"KOENIGSEGG" 
+        id:6, img:"https://i.ibb.co/txPP6y7/2015-koenigsegg-one1-first-drive-review-car-and-driver-photo-654233-s-original.jpg", brand:"KOENIGSEGG" 
     }
 ]
 app.use(cors());
@@ -44,6 +44,20 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+    const productCollection= client.db("brandDB").collection("products")
+    app.get('/products', async(req, res)=>{
+        const cursor = productCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+    })
+    app.post('/products', async(req, res)=>{
+        const newProduct = req.body;
+        console.log(newProduct);
+        const result=await productCollection.insertOne(newProduct);
+        res.send(result)
+    })
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
