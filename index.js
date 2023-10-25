@@ -109,6 +109,20 @@ async function run() {
       res.send(result);
 
     });
+    app.put('/user/:id', async(req, res)=>{
+      const id = req.params.id;
+      const filter = {_id : new ObjectId(id)}
+      const options ={upsert : true};
+      const updated = req.body;
+      const user = {
+        $set:{
+          Cart: updated.updatedCart
+        }
+      }
+      const result = await userCollection.updateOne(filter, user,options);
+      res.send(result)
+
+    })
 
 
     // Send a ping to confirm a successful connection
